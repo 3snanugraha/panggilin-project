@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "panggilin-project",
+    "name": "Panggilin",
     "slug": "panggilin-project",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/panggilin.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -13,24 +13,24 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "foregroundImage": "./assets/images/panggilin.png",
+        "backgroundColor": "#7E57C2"
+      },
+      "package": "com.artadev.panggilin"
     },
     "web": {
       "bundler": "metro",
       "output": "static",
-      "favicon": "./assets/images/favicon.png"
+      "favicon": "./assets/images/panggilin.png"
     },
     "plugins": [
       "expo-router",
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
-          "resizeMode": "contain",
-          "backgroundColor": "#ffffff"
+          "image": "./assets/images/panggilin-splash.png",
+          "resizeMode": "cover",
+          "backgroundColor": "#7E57C2"
         }
       ]
     ],

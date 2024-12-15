@@ -1,50 +1,43 @@
-# Welcome to your Expo app 👋
+# Platform Panggilin
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+Platform marketplace mobile yang menghubungkan penyedia jasa dengan pelanggan untuk berbagai layanan seperti jasa tukang, pengambilan sampah, jasa kebersihan, dan lainnya.
 
-## Get started
+## Teknologi yang Digunakan
 
-1. Install dependencies
+- React Native dengan Expo
+- Supabase untuk Backend & Fitur Real-time
+- Xendit Payment Gateway
+- Expo Router untuk Navigasi
 
-   ```bash
-   npm install
-   ```
+## Fitur
 
-2. Start the app
+- 🔐 Sistem Autentikasi
+- 💬 Chat Real-time
+- 🔍 Pencarian Jasa
+- 💳 Pembayaran Aman via Xendit
+- 📱 Dua Antarmuka (Pelanggan & Mitra)
+- 📍 Layanan Berbasis Lokasi
+- 📊 Manajemen Pesanan
 
-   ```bash
-    npx expo start
-   ```
+## Struktur Proyek
 
-In the output, you'll find options to open the app in a
+## Memulai Pengembangan
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
+# 1. Clone repository:
 ```bash
-npm run reset-project
+git clone https://github.com/yourusername/panggilin-mobile.git
 ```
+# 2. Masuk ke Direktori Proyek
+```bash
+cd panggilin-mobile
+```
+# 3. Instalasi Dependensi
+```bash
+npm install
+```
+# Pengaturan environment variables:
+- Buat file .env berdasarkan .env.example
+- Konfigurasi kredensial Supabase dan Xendit
+- Jalankan server development:
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+# npx expo start
