@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/src/constant/theme';
 import { Button, ButtonText, Container, Input, Title, Description } from '@/src/components/ui';
 import { useAuth } from '@/src/hooks/useAuth';
+import { Alert } from '@/src/components/alerts/Alert';
 
 type Role = 'mitra' | 'pengguna';
 
@@ -39,12 +40,19 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     try {
-      await signUp(email, password, role);
-      router.replace('/(auth)/login');
-    } catch (error) {
-      console.error(error);
+      const { data } = await signUp(email, password, role);
+      if (!data.session) {
+        <Alert 
+          type="success" 
+          message="Registration successful! Please check your email for verification."
+        />
+        router.replace('/(auth)/verify');
+      }
+    } catch (error: any) {
+      <Alert type="error" message={error.message} />
     }
-  };
+  };  
+  
 
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
