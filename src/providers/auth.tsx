@@ -3,6 +3,8 @@ import { User, Session } from '@supabase/supabase-js';
 import { Alert } from 'react-native';
 import { supabase } from '@/src/api/supabase';
 import { Tables } from '@/src/api/supabase';
+import { linking } from '@/src/utils/linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type AuthContextType = {
   session: Session | null;
@@ -13,7 +15,7 @@ type AuthContextType = {
     data: {
       user: User | null;
       session: Session | null;
-    };
+    }
   }>;
   signOut: () => Promise<void>;
 };
@@ -27,6 +29,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
+      console.log('Session state:', session);
       setSession(session);
       if (session?.user) {
         fetchUser(session.user.id);
@@ -34,6 +37,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      console.log('Auth state changed:', _event);
       setSession(session);
       if (session?.user) {
         fetchUser(session.user.id);
@@ -47,20 +51,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   async function fetchUser(userId: string) {
     try {
+      console.log('Fetching user with ID:', userId);
+      
       const { data, error } = await supabase
         .from('users')
         .select('*')
         .eq('id', userId)
         .single();
-
+  
+      console.log('Database query result:', { data, error });
+  
       if (error) {
+        console.log('User not found in database, signing out');
         await supabase.auth.signOut();
         setSession(null);
         setUser(null);
         return;
       }
-
+  
       if (data) {
+        console.log('User data fetched:', data);
         setUser(data);
       }
     } catch (error) {
@@ -78,6 +88,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signIn: async (email: string, password: string) => {
       try {
         setLoading(true);
+        console.log('Attempting sign in for:', email);
         
         const { data: { user }, error } = await supabase.auth.signInWithPassword({ 
           email, 
@@ -90,6 +101,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           throw new Error('Please verify your email before logging in');
         }
     
+        console.log('Sign in successful:', user);
       } catch (error: any) {
         console.error('Sign in error:', error);
         Alert.alert('Error signing in', error.message);
@@ -102,7 +114,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp: async (email: string, password: string, role: 'mitra' | 'pengguna') => {
       try {
         setLoading(true);
-        console.log('Starting signup for:', email, 'with role:', role);
         
         const { data, error } = await supabase.auth.signUp({ 
           email, 
@@ -111,28 +122,25 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             data: { 
               role,
               email_verified: false
-            }
+            },
+            emailRedirectTo: 'https://panggilin.artadev.my.id/verify'  // Use full URL
           }
         });
         
-        console.log('Signup response:', {
-          user: data.user?.id,
-          session: data.session?.access_token?.substring(0, 10) + '...',
-          error
-        });
-
         if (error) throw error;
+        await AsyncStorage.setItem('verificationEmail', email);
         return { data };
       } catch (error: any) {
-        console.error('Detailed signup error:', error);
         throw error;
       } finally {
         setLoading(false);
       }
     },
+
     signOut: async () => {
       try {
         setLoading(true);
+        console.log('Initiating sign out');
         
         setUser(null);
         setSession(null);
@@ -140,6 +148,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const { error } = await supabase.auth.signOut();
         if (error) throw error;
         
+        console.log('Sign out successful');
       } catch (error: any) {
         console.error('Sign out error:', error);
         Alert.alert('Error signing out', error.message);

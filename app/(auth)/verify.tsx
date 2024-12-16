@@ -1,15 +1,16 @@
-import React, { useEffect, useState, useCallback } from 'react';
-import { Image, StyleSheet, ScrollView, View } from 'react-native';
-import { useRouter, useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { Image, StyleSheet, ScrollView, View, Alert } from 'react-native';
+import { useRouter } from 'expo-router';
 import * as Linking from 'expo-linking';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/src/constant/theme';
 import { Container, Title, Description, Button, ButtonText } from '@/src/components/ui';
 import { supabase } from '@/src/api/supabase';
+import { linking } from '@/src/utils/linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VerifyScreen() {
   const router = useRouter();
-  const params = useLocalSearchParams();
   const [isVerified, setIsVerified] = useState(false);
   const [countdown, setCountdown] = useState(300);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,61 +33,92 @@ export default function VerifyScreen() {
   const handleResendVerification = async () => {
     try {
       setIsLoading(true);
+      const email = await AsyncStorage.getItem('verificationEmail');
+      console.log('Resending verification email to:', email);
+
       const { error } = await supabase.auth.resend({
         type: 'signup',
-        email: params.email as string
+        email: email as string,
+        options: {
+          emailRedirectTo: `${linking.prefixes[0]}verify`
+        }
       });
       
       if (error) throw error;
       
+      Alert.alert('Success', 'Verification email has been resent');
       setError(null);
       setCountdown(300);
     } catch (error: any) {
+      console.error('Resend verification error:', error);
       setError('Failed to resend verification email');
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleVerification = useCallback(async (token: string) => {
+  const handleVerification = async (token: string) => {
     try {
       setIsLoading(true);
-      console.log('Verification attempt with token:', token);
-
+      const email = await AsyncStorage.getItem('verificationEmail');
+      
       const { data, error } = await supabase.auth.verifyOtp({
-        type: 'signup',
-        token,
-        email: params.email as string
+        email: email as string,
+        token: decodeURIComponent(token),
+        type: 'signup'
       });
-
-      console.log('Verification response:', { data, error });
-
-      if (data.user) {
+  
+      if (error) {
+        if (error.message.includes('expired')) {
+          throw new Error('Verification link has expired. Please request a new one.');
+        }
+        throw error;
+      }
+  
+      if (data?.user) {
         setIsVerified(true);
+        await AsyncStorage.removeItem('verificationEmail');
         setTimeout(() => router.replace('/(auth)/login'), 2000);
       }
-    } catch (error) {
-      console.error('Verification error:', error);
-      setError('Verification failed. Please try again.');
+    } catch (error: any) {
+      console.error('Verification failed:', error);
+      setError(error.message);
     } finally {
       setIsLoading(false);
     }
-  }, [params.email, router]);
+  };
+  
 
   useEffect(() => {
     const subscription = Linking.addEventListener('url', ({ url }) => {
-      console.log('Received URL:', url);
       const parsedUrl = Linking.parse(url);
-      console.log('Parsed URL:', parsedUrl);
       
-      const token = parsedUrl.queryParams?.token;
-      if (token && typeof token === 'string') {
-        handleVerification(token);
+      if (parsedUrl.hostname === 'verify') {
+        console.log('Received verification URL:', url);
+        console.log('Parsed verification data:', parsedUrl);
+        
+        const token = parsedUrl.queryParams?.token;
+        if (token && typeof token === 'string') {
+          handleVerification(token);
+        }
+      }
+    });
+
+    // Handle initial URL
+    Linking.getInitialURL().then((url) => {
+      if (url) {
+        const parsedUrl = Linking.parse(url);
+        if (parsedUrl.hostname === 'verify') {
+          const token = parsedUrl.queryParams?.token;
+          if (token && typeof token === 'string') {
+            handleVerification(token);
+          }
+        }
       }
     });
 
     return () => subscription.remove();
-  }, [handleVerification]);
+  }, []);
 
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);

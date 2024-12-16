@@ -9,11 +9,9 @@ export const linking = {
           verify: {
             path: 'verify',
             parse: {
-              token: (token: string) => token,
+              token: (token: string) => decodeURIComponent(token),
             },
-          },
-          login: 'login',
-          register: 'register'
+          }
         }
       }
     }

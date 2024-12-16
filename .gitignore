@@ -38,3 +38,4 @@ ios
 *.tsbuildinfo
 
 app-example
+.env
