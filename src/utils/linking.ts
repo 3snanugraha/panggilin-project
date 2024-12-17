@@ -1,17 +1,14 @@
 import * as Linking from 'expo-linking';
 
 export const linking = {
-  prefixes: ['panggilin://', 'https://panggilin.artadev.my.id'],
+  prefixes: ['panggilin://', 'https://panggilin.artadev.my.id'], // Simplify prefixes
   config: {
     screens: {
+      verify: 'verify', // Directly link to the verify screen
       '(auth)': {
         screens: {
-          verify: {
-            path: 'verify',
-            parse: {
-              token: (token: string) => decodeURIComponent(token),
-            },
-          }
+          login: 'login',
+          register: 'register'
         }
       }
     }

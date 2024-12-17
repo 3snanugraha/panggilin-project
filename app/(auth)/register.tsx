@@ -40,18 +40,22 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     try {
+      console.log('🚀 Starting registration process');
+      console.log('Registration data:', { email, role });
+      
       const { data } = await signUp(email, password, role);
+      console.log('📨 Registration response:', data);
+      
       if (!data.session) {
-        <Alert 
-          type="success" 
-          message="Registration successful! Please check your email for verification."
-        />
+        console.log('✉️ Redirecting to verification page');
         router.replace('/(auth)/verify');
       }
     } catch (error: any) {
-      <Alert type="error" message={error.message} />
+      console.error('❌ Registration failed:', error);
+      console.error('Error', error.message);
     }
-  };  
+  };
+   
   
 
   return (

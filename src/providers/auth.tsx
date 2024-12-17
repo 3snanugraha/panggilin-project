@@ -3,7 +3,7 @@ import { User, Session } from '@supabase/supabase-js';
 import { Alert } from 'react-native';
 import { supabase } from '@/src/api/supabase';
 import { Tables } from '@/src/api/supabase';
-import { linking } from '@/src/utils/linking';
+import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type AuthContextType = {
@@ -114,23 +114,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     signUp: async (email: string, password: string, role: 'mitra' | 'pengguna') => {
       try {
         setLoading(true);
+        console.log('📝 Starting Supabase signup process');
+        console.log('Signup data:', { email, role });
         
-        const { data, error } = await supabase.auth.signUp({ 
-          email, 
+        const redirectUrl = Linking.createURL('verify');
+        console.log('🔗 Redirect URL:', redirectUrl);
+        
+        const { data, error } = await supabase.auth.signUp({
+          email,
           password,
           options: {
-            data: { 
-              role,
-              email_verified: false
-            },
-            emailRedirectTo: 'https://panggilin.artadev.my.id/verify'  // Use full URL
+            data: { role, email_verified: false },
+            emailRedirectTo: redirectUrl
           }
         });
         
+        console.log('📬 Supabase signup response:', {
+          userId: data.user?.id,
+          sessionExists: !!data.session,
+          error
+        });
+    
         if (error) throw error;
+    
         await AsyncStorage.setItem('verificationEmail', email);
+        console.log('💾 Stored verification email in AsyncStorage');
+        
         return { data };
       } catch (error: any) {
+        console.error('❌ Signup process failed:', error);
         throw error;
       } finally {
         setLoading(false);
