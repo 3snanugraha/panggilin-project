@@ -1,0 +1,80 @@
+<html lang="en">
+ <head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>
+   Flight Booking
+  </title>
+  <script src="https://cdn.tailwindcss.com">
+  </script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+ </head>
+ <body class="bg-gray-100">
+  <div class="min-h-screen flex flex-col items-center bg-blue-500 text-white">
+   <div class="w-full max-w-md p-4">
+    <div class="flex justify-between items-center">
+     <div>
+      <p class="text-sm">
+       Hello Amir - Zhen,
+      </p>
+      <h1 class="text-xl font-bold">
+       Book your next Flight
+      </h1>
+     </div>
+     <img alt="User profile picture" class="rounded-full" height="40" src="https://storage.googleapis.com/a1aa/image/3efzX0TEkThYwEx3IkeJvHVuhb8FrrNTD0x9qiKD9zQG5Q3nA.jpg" width="40"/>
+    </div>
+    <div class="mt-4 flex justify-around">
+     <button class="bg-yellow-500 text-black py-2 px-4 rounded-full">
+      Round Trip
+     </button>
+     <button class="bg-white text-black py-2 px-4 rounded-full">
+      One way
+     </button>
+     <button class="bg-white text-black py-2 px-4 rounded-full">
+      Multi city
+     </button>
+    </div>
+    <div class="bg-white text-black p-4 mt-4 rounded-lg shadow-lg">
+     <div class="mb-4">
+      <label class="block text-gray-500">
+       From (Location)
+      </label>
+      <input class="w-full p-2 mt-1 bg-gray-100 rounded-lg" readonly="" type="text" value="New York (NYC)"/>
+     </div>
+     <div class="mb-4">
+      <label class="block text-gray-500">
+       To (Destination)
+      </label>
+      <input class="w-full p-2 mt-1 bg-gray-100 rounded-lg" readonly="" type="text" value="London (LDN)"/>
+     </div>
+     <div class="flex justify-between mb-4">
+      <div class="w-1/2 pr-2">
+       <label class="block text-gray-500">
+        Departure
+       </label>
+       <input class="w-full p-2 mt-1 bg-gray-100 rounded-lg" readonly="" type="text" value="Dec 4th, 2021"/>
+      </div>
+      <div class="w-1/2 pl-2">
+       <label class="block text-gray-500">
+        Return
+       </label>
+       <input class="w-full p-2 mt-1 bg-gray-100 rounded-lg" readonly="" type="text" value="Dec 16th, 2021"/>
+      </div>
+     </div>
+     <button class="w-full bg-blue-500 text-white py-2 rounded-lg">
+      Search flights
+     </button>
+    </div>
+   </div>
+  </div>
+  <div class="w-full max-w-md p-4">
+   <h2 class="text-lg font-bold mb-4">
+    Popular place
+   </h2>
+   <div class="grid grid-cols-2 gap-4">
+    <img alt="Popular place image 1" class="rounded-lg" height="100" src="https://storage.googleapis.com/a1aa/image/TdQ07gIlv4qrPBXxfXOoUZ2NhljxPf3BBEfrY4g8WQZM5Q3nA.jpg" width="150"/>
+    <img alt="Popular place image 2" class="rounded-lg" height="100" src="https://storage.googleapis.com/a1aa/image/qGxML78VgBJYGpMTErDOMWDegMBdt7qAiqHzcGyx66zSO09JA.jpg" width="150"/>
+   </div>
+  </div>
+ </body>
+</html>
