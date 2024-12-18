@@ -81,7 +81,7 @@ export default function HomeScreen() {
               <Text style={styles.locationText}>Lokasi User</Text>
               <Ionicons name="location" size={16} color={theme.colors.white} />
             </View>
-            <Ionicons name="chatbubble-outline" size={24} color={theme.colors.white} />
+            <Ionicons name="chatbubble-ellipses-outline" size={24} color={theme.colors.white} />
           </View>
 
           {/* Search Bar */}

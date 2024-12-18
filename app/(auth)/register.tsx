@@ -58,8 +58,6 @@ export default function RegisterScreen() {
     }
   };
    
-  
-
   return (
     <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
       <Container style={styles.container}>
