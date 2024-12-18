@@ -5,7 +5,6 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/src/constant/theme';
 import { Button, ButtonText, Container, Input, Title, Description } from '@/src/components/ui';
 import { useAuth } from '@/src/hooks/useAuth';
-import { Alert } from '@/src/components/alerts/Alert';
 import { Ionicons } from '@expo/vector-icons';
 
 type Role = 'mitra' | 'pengguna';
