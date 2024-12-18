@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
-import { Image, StyleSheet, ScrollView, View, Pressable } from 'react-native';
+import { Image, StyleSheet, ScrollView, View, Pressable, TouchableOpacity } from 'react-native';
 import { useRouter } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { theme } from '@/src/constant/theme';
 import { Button, ButtonText, Container, Input, Title, Description } from '@/src/components/ui';
 import { useAuth } from '@/src/hooks/useAuth';
 import { Alert } from '@/src/components/alerts/Alert';
+import { Ionicons } from '@expo/vector-icons';
 
 type Role = 'mitra' | 'pengguna';
 
@@ -37,6 +38,8 @@ export default function RegisterScreen() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [role, setRole] = useState<Role>('pengguna');
+  const [showPassword, setShowPassword] = useState(false);
+
 
   const handleRegister = async () => {
     try {
@@ -87,14 +90,26 @@ export default function RegisterScreen() {
             autoCapitalize="none"
             placeholderTextColor={theme.colors.shadow}
           />
-          <Input
-            style={styles.input}
-            placeholder="Password"
-            value={password}
-            onChangeText={setPassword}
-            secureTextEntry
-            placeholderTextColor={theme.colors.shadow}
-          />
+          <View style={styles.inputContainer}>
+            <Input
+              style={styles.input}
+              placeholder="Password"
+              value={password}
+              onChangeText={setPassword}
+              secureTextEntry={!showPassword}
+              placeholderTextColor={theme.colors.shadow}
+            />
+            <TouchableOpacity 
+              style={styles.eyeIcon}
+              onPress={() => setShowPassword(!showPassword)}
+            >
+              <Ionicons 
+                name={showPassword ? "eye-outline" : "eye-off-outline"} 
+                size={24} 
+                color={theme.colors.primary} 
+              />
+            </TouchableOpacity>
+          </View>
           
           <View style={styles.roleContainer}>
             <Description style={styles.roleLabel}>Daftar sebagai:</Description>
@@ -232,5 +247,15 @@ const styles = StyleSheet.create({
   linkText: {
     color: theme.colors.white,
     fontSize: 16,
+  },
+  inputContainer: {
+    width: '100%',
+    position: 'relative',
+    marginBottom: theme.spacing.md,
+  },
+  eyeIcon: {
+    position: 'absolute',
+    right: 16,
+    top: 12,
   },
 });

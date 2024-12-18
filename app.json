@@ -9,7 +9,23 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "LSApplicationQueriesSchemes": [
+          "mailto",
+          "message",
+          "readdle-spark",
+          "airmail",
+          "ms-outlook",
+          "googlegmail",
+          "inbox-gmail",
+          "ymail",
+          "superhuman",
+          "yandexmail",
+          "fastmail",
+          "protonmail"
+        ]
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -28,7 +44,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/panggilin-splash.png",
+          "image": "./assets/images/panggilin.png",
           "resizeMode": "cover",
           "backgroundColor": "#7E57C2"
         }
@@ -37,6 +53,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "33d31597-7556-46e3-875e-9da0e5f87e08"
+      }
+    },
+    "owner": "3snanugraha"
   }
 }
