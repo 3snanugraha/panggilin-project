@@ -32,7 +32,8 @@
           "resizeMode": "cover",
           "backgroundColor": "#7E57C2"
         }
-      ]
+      ],
+      "react-native-email-link"
     ],
     "experiments": {
       "typedRoutes": true

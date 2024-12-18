@@ -9,6 +9,7 @@ export const theme = {
     white: '#FFFFFF',
     black: '#000000',
     shadow: 'rgba(0, 0, 0, 0.5)',
+    primarybgglass: 'rgba(255, 255, 255, 0.2)',
   },
 
   gradients: {

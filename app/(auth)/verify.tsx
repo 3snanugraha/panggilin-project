@@ -7,6 +7,7 @@ import { theme } from '@/src/constant/theme';
 import { Container, Title, Description, Button, ButtonText } from '@/src/components/ui';
 import { supabase } from '@/src/api/supabase';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { openInbox } from 'react-native-email-link';
 
 export default function VerifyScreen() {
   const router = useRouter();
@@ -198,18 +199,11 @@ export default function VerifyScreen() {
               ) : (
                 <Button 
                   style={styles.button}
-                  onPress={() => Linking.openURL('mailto:')}
+                  onPress={() => openInbox()}
                 >
                   <ButtonText style={styles.buttonText}>Buka Email</ButtonText>
                 </Button>
               )}
-
-              <Button 
-                style={styles.linkButton}
-                onPress={() => router.replace('/(auth)/login')}
-              >
-                <ButtonText style={styles.linkText}>Kembali ke Login</ButtonText>
-              </Button>
             </>
           )}
         </View>

@@ -11,7 +11,7 @@ export default function CustomerLayout() {
         },
         headerTintColor: theme.colors.white,
         tabBarStyle: {
-          backgroundColor: theme.colors.white,
+          backgroundColor: theme.colors.primary,
           borderTopLeftRadius: 17,
           borderTopRightRadius: 17,
           elevation: 8,
@@ -27,8 +27,8 @@ export default function CustomerLayout() {
           left: 0,
           right: 0,
         },
-        tabBarActiveTintColor: theme.colors.primary,
-        tabBarInactiveTintColor: theme.colors.primaryDark,
+        tabBarActiveTintColor: theme.colors.white,
+        tabBarInactiveTintColor: theme.colors.white,
         tabBarLabelStyle: {
           fontSize: 12,
           fontWeight: 'bold',
