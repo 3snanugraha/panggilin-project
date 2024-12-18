@@ -32,7 +32,12 @@
         "foregroundImage": "./assets/images/panggilin.png",
         "backgroundColor": "#7E57C2"
       },
-      "package": "com.artadev.panggilin"
+      "package": "com.artadev.panggilin",
+      "permissions": [
+        "INTERNET",
+        "ACCESS_COARSE_LOCATION",
+        "ACCESS_FINE_LOCATION"
+      ]
     },
     "web": {
       "bundler": "metro",

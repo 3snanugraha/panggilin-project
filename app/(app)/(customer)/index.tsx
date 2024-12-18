@@ -1,20 +1,52 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Image, ScrollView, StyleSheet, View, TextInput, Text, TouchableOpacity, BackHandler, Alert } from 'react-native';
+import { Image, ScrollView, StyleSheet, View, TextInput, Text, TouchableOpacity, BackHandler, Alert, ActivityIndicator } from 'react-native';
 import { theme } from '@/src/constant/theme';
 import { Container } from '@/src/components/ui';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '@/src/hooks/useAuth';
 import { useRouter } from 'expo-router';
+import { locationService } from '@/src/services/location';
 
 export default function HomeScreen() {
   const [showDropdown, setShowDropdown] = useState(false);
+  const [location, setLocation] = useState<string>('Loading...');
+  const [isLoadingLocation, setIsLoadingLocation] = useState(false);
   const { signOut } = useAuth();
   const router = useRouter();
+
+
+  const formatDisplayAddress = (address: string) => {
+    if (!address || address === 'Loading...' || address === 'Location unavailable') {
+      return address;
+    }
+    const firstPart = address.split(',')[0];
+    return `${firstPart}...`;
+  };
+
+  const loadLocation = async () => {
+    setIsLoadingLocation(true);
+    try {
+      const userLocation = await locationService.getCurrentLocation();
+      setLocation(userLocation.address);
+    } catch (error) {
+      setLocation('Location unavailable');
+    } finally {
+      setIsLoadingLocation(false);
+    }
+  };
+
+  useEffect(() => {
+    loadLocation();
+  }, []);
 
   const handleLogout = async () => {
     await signOut();
     router.replace('/(auth)/login');
+  };
+
+  const handleLocationPress = () => {
+    router.push('/(app)/(maps)');
   };
 
   useEffect(() => {
@@ -38,49 +70,66 @@ export default function HomeScreen() {
     return () => backHandler.remove();
   }, []);
 
-
   return (
     <Container style={styles.container}>
       <ScrollView>
-        
         <View style={styles.headerContainer}>
           {/* Header */}
           <View style={styles.header}>
-          <TouchableOpacity 
-            onPress={() => setShowDropdown(!showDropdown)}
-            style={styles.profileContainer}
-          >
-            <Image 
-              source={{ uri: 'https://storage.googleapis.com/a1aa/image/YMZldHxcjwZiAtXmzeZpw7K98yC1JEF6qNYYboLOqSnZDf7TA.jpg' }}
-              style={styles.profilePic}
-            />
-            {showDropdown && (
-              <View style={styles.dropdown}>
-                <TouchableOpacity 
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setShowDropdown(false);
-                    // Navigate to account page
-                  }}
-                >
-                  <Text>Akun Saya</Text>
-                </TouchableOpacity>
-                <TouchableOpacity 
-                  style={styles.dropdownItem}
-                  onPress={() => {
-                    setShowDropdown(false);
-                    handleLogout();
-                  }}
-                >
-                  <Text>Logout</Text>
-                </TouchableOpacity>
-              </View>
-            )}
-          </TouchableOpacity>
-            <View style={styles.locationContainer}>
-              <Text style={styles.locationText}>Lokasi User</Text>
+            <TouchableOpacity 
+              onPress={() => setShowDropdown(!showDropdown)}
+              style={styles.profileContainer}
+            >
+              <Image 
+                source={{ uri: 'https://storage.googleapis.com/a1aa/image/YMZldHxcjwZiAtXmzeZpw7K98yC1JEF6qNYYboLOqSnZDf7TA.jpg' }}
+                style={styles.profilePic}
+              />
+              {showDropdown && (
+                <View style={styles.dropdown}>
+                  <TouchableOpacity 
+                    style={styles.dropdownItem}
+                    onPress={() => {
+                      setShowDropdown(false);
+                      // Navigate to account page
+                    }}
+                  >
+                    <Ionicons name="person-outline" size={20} color={theme.colors.black} />
+                    <Text style={styles.dropdownText}>Akun Saya</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity 
+                    style={styles.dropdownItem}
+                    onPress={() => {
+                      setShowDropdown(false);
+                      handleLogout();
+                    }}
+                  >
+                    <Ionicons name="log-out-outline" size={20} color={theme.colors.black} />
+                    <Text style={styles.dropdownText}>Logout</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            </TouchableOpacity>
+            <TouchableOpacity 
+              style={styles.locationContainer}
+              onPress={handleLocationPress}
+            >
+              <Text style={styles.locationText}>{formatDisplayAddress(location)}</Text>
+              <TouchableOpacity 
+                onPress={(e) => {
+                  e.stopPropagation();
+                  loadLocation();
+                }}
+                disabled={isLoadingLocation}
+                style={styles.reloadButton}
+              >
+                {isLoadingLocation ? (
+                  <ActivityIndicator size="small" color={theme.colors.white} />
+                ) : (
+                  <Ionicons name="reload-outline" size={16} color={theme.colors.white} />
+                )}
+              </TouchableOpacity>
               <Ionicons name="location" size={16} color={theme.colors.white} />
-            </View>
+            </TouchableOpacity>
             <Ionicons name="chatbubble-ellipses-outline" size={24} color={theme.colors.white} />
           </View>
 
@@ -168,6 +217,7 @@ export default function HomeScreen() {
     </Container>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -184,10 +234,47 @@ const styles = StyleSheet.create({
     borderBottomStartRadius: 35,
     borderBottomRightRadius: 35,
   },
+  profileContainer: {
+    position: 'relative',
+    zIndex: 2,
+  },
   profilePic: {
     width: 40,
     height: 40,
     borderRadius: 20,
+    borderWidth: 2,
+    borderColor: theme.colors.white,
+  },
+  dropdown: {
+    position: 'absolute',
+    top: 45,
+    left: 0,
+    backgroundColor: theme.colors.white,
+    borderRadius: 12,
+    width: 180,
+    shadowColor: theme.colors.shadow,
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    paddingVertical: 8,
+  },
+  dropdownItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    gap: 12,
+  },
+  dropdownText: {
+    fontSize: 14,
+    color: theme.colors.black,
+    fontWeight: '500',
+  },
+  divider: {
+    height: 1,
+    backgroundColor: '#E5E5E5',
+    marginVertical: 4,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -201,6 +288,10 @@ const styles = StyleSheet.create({
   locationText: {
     fontSize: 14,
     color: theme.colors.white,
+  },
+  reloadButton: {
+    padding: 4,
+    marginHorizontal: 4,
   },
   searchContainer: {
     padding: 16,
@@ -287,27 +378,5 @@ const styles = StyleSheet.create({
   },
   strikethrough: {
     textDecorationLine: 'line-through',
-  },
-  profileContainer: {
-    position: 'relative',
-  },
-  dropdown: {
-    position: 'absolute',
-    top: 45,
-    right: 0,
-    backgroundColor: 'white',
-    borderRadius: 8,
-    padding: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    zIndex: 1000,
-  },
-  dropdownItem: {
-    padding: 12,
-    borderBottomWidth: 1,
-    borderBottomColor: '#f0f0f0',
-  },
+  }
 });
